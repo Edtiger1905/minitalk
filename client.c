@@ -19,7 +19,7 @@ void send_signal(int pid, unsigned char character)
     i = 0;
     while(i < 8)
     {
-        g_bit_acknowledget = 0;
+        g_bit_acknowledged = 0;
 
         if((character >> i) & 1)
             kill(pid, SIGUSR1);
@@ -47,14 +47,14 @@ int main(int ac, char *av[])
     sa.sa_handler = ack_handler;
     sa.sa_flags = 0;
     sigemptyset(&sa.sa_mask);
-    sigaction(SIGURSR1, &sa, NULL);
+    sigaction(SIGUSR1, &sa, NULL);
     server_pid = atoi(av[1]);
     message = av[2];
     i = 0;
     while(message[i])
     {
         send_signal(server_pid, message[i]);
-        i++
+        i++;
     }
     send_signal(server_pid, '\0');
     usleep(1000);
